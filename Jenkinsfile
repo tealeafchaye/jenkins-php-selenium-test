@@ -6,7 +6,8 @@ pipeline {
 				stage('Deploy') {
 					agent any
 					steps {
-						sh 'chmod +x jenkins/scripts/deploy.sh && chmod +x jenkins/scripts/kill.sh'
+						sh 'chmod +x jenkins/scripts/deploy.sh'
+						sh 'chmod +x jenkins/scripts/kill.sh'
 						sh './jenkins/scripts/deploy.sh'
 						input message: 'Finished using the web site? (Click "Proceed" to continue)'
 						sh './jenkins/scripts/kill.sh'
@@ -14,7 +15,7 @@ pipeline {
 				}
 				stage('Headless Browser Test') {
 					agent {
-						any {
+						docker {
 							image 'maven:3-alpine' 
 							args '-v /root/.m2:/root/.m2' 
 						}
